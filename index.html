@@ -1,0 +1,810 @@
+<!doctype html>
+<html lang="es">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Ranking de Universidades </title>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,200..800;1,6..72,200..800&family=Source+Sans+3:ital,wght@0,200..900;1,200..900&display=swap" rel="stylesheet"/>
+        <style>
+            :root {
+                --color-bg: #fafafa;
+                --color-bg-nota: hsl(30, 5%, 85%);
+                --color-text: rgb(60, 60, 60);
+                --color-text-dark: rgb(30, 30, 30);
+                --color-text-light: rgba(90, 90, 90, 1);
+                --color-border: silver;
+                --font-sans: "Source Sans 3", "Helvetica Neue", Helvetica, Arial, sans-serif;
+                --font-serif: "Newsreader", Georgia, "Times New Roman", serif;
+            }
+
+            *,
+            *::before,
+            *::after {
+                box-sizing: border-box;
+                margin: 0;
+                padding: 0;
+            }
+
+            body {
+                font-family: var(--font-serif);
+                color: var(--color-text);
+                background: var(--color-bg);
+                margin: 0 auto;
+                padding: 1.5rem;
+                line-height: 1.6;
+                font-size: 1.2rem;
+            }
+
+            a {
+                color: var(--color-text-dark);
+                text-decoration: underline;
+                text-decoration-style: dotted;
+                text-underline-offset: 3px;
+                transition: all ease 0.5s;
+            }
+
+            a:hover {
+                text-decoration-style: solid;
+            }
+
+            p {
+                margin-bottom: 1rem;
+            }
+
+            em {
+                font-weight: 600;
+                font-style: normal;
+            }
+
+            abbr {
+                font-size: 90%;
+                text-decoration: none;
+                cursor: help;
+            }
+
+            ul,
+            ol {
+                list-style-position: inside;
+            }
+
+            ul li,
+            ol li {
+                margin-bottom: 0.5rem;
+            }
+
+            .container {
+                margin: 0 auto;
+                width: 90%;
+                max-width: 700px;
+            }
+
+            h1,
+            h2,
+            h3,
+            h4,
+            h5,
+            h6 {
+                font-family: var(--font-sans);
+                line-height: 1.2;
+            }
+
+            h1,
+            h2,
+            h3,
+            h4 {
+                font-weight: 700;
+            }
+
+            h5,
+            h6 {
+                font-weight: 400;
+                text-align: center;
+                color: var(--color-text-light);
+            }
+
+            h1 {
+                font-size: calc(1.5rem + 2.5vw);
+                text-align: center;
+                margin-top: 10vh;
+            }
+
+            h1:before {
+                content: "";
+                display: block;
+                width: calc(1.5rem + 5vw);
+                height: calc(1.5rem + 5vw);
+                margin: 0 auto 1rem auto;
+                background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-globe-americas" viewBox="0 0 16 16"><path d="M8 0a8 8 0 1 0 0 16A8 8 0 0 0 8 0M2.04 4.326c.325 1.329 2.532 2.54 3.717 3.19.48.263.793.434.743.484q-.121.12-.242.234c-.416.396-.787.749-.758 1.266.035.634.618.824 1.214 1.017.577.188 1.168.38 1.286.983.082.417-.075.988-.22 1.52-.215.782-.406 1.48.22 1.48 1.5-.5 3.798-3.186 4-5 .138-1.243-2-2-3.5-2.5-.478-.16-.755.081-.99.284-.172.15-.322.279-.51.216-.445-.148-2.5-2-1.5-2.5.78-.39.952-.171 1.227.182.078.099.163.208.273.318.609.304.662-.132.723-.633.039-.322.081-.671.277-.867.434-.434 1.265-.791 2.028-1.12.712-.306 1.365-.587 1.579-.88A7 7 0 1 1 2.04 4.327Z"/></svg>');
+                background-repeat: no-repeat;
+                background-size: contain;
+            }
+
+            h2 {
+                font-size: calc(1.25rem + 1.25vw);
+                text-align: center;
+                margin-bottom: 5vh;
+            }
+
+            h3 {
+                font-size: calc(1rem + 0.75vw);
+                margin: 2rem 0 0.5rem 0;
+                line-height: 1;
+                color: dimgray;
+            }
+
+            h3#universidades,
+            h3#escuelas,
+            h3#intercambios {
+                text-indent: calc(1rem + 1vw);
+                background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="dimgray" class="bi bi-globe-americas" viewBox="0 0 16 16"><path d="M8 0a8 8 0 1 0 0 16A8 8 0 0 0 8 0M2.04 4.326c.325 1.329 2.532 2.54 3.717 3.19.48.263.793.434.743.484q-.121.12-.242.234c-.416.396-.787.749-.758 1.266.035.634.618.824 1.214 1.017.577.188 1.168.38 1.286.983.082.417-.075.988-.22 1.52-.215.782-.406 1.48.22 1.48 1.5-.5 3.798-3.186 4-5 .138-1.243-2-2-3.5-2.5-.478-.16-.755.081-.99.284-.172.15-.322.279-.51.216-.445-.148-2.5-2-1.5-2.5.78-.39.952-.171 1.227.182.078.099.163.208.273.318.609.304.662-.132.723-.633.039-.322.081-.671.277-.867.434-.434 1.265-.791 2.028-1.12.712-.306 1.365-.587 1.579-.88A7 7 0 1 1 2.04 4.327Z"/></svg>');
+                background-repeat: no-repeat;
+                background-size: calc(1rem + 0.5vw);
+            }
+
+            h4 {
+                font-size: calc(1rem + 0.25vw);
+                margin: 1.25rem 0 0.75rem 0;
+                line-height: 1;
+            }
+
+            h5 {
+                font-size: 0.9rem;
+                margin-bottom: 0.5rem;
+            }
+
+            h5 a {
+                font-weight: 600;
+                color: var(--color-text-dark);
+                text-decoration: none;
+            }
+
+            h5 a:hover {
+                text-decoration: underline;
+                text-decoration-style: dotted;
+            }
+
+            h6 {
+                font-size: 0.8rem;
+                margin-bottom: 3rem;
+                letter-spacing: 0.01rem;
+            }
+
+            hr{
+                margin-top:2rem;
+                border:2px solid #ddd;
+            }
+
+            div.container > p:nth-child(1) {
+                font-size: 120%;
+            }
+
+            table {
+                border-collapse: collapse;
+                width: calc(100% + 1.5rem);
+                margin: 0 -0.75rem 2.5rem -0.75rem;
+                font-family: var(--font-sans);
+                font-size: 85%;
+                font-weight: 300;
+            }
+
+            tr,
+            tr:hover {
+                transition: background ease 0.4s;
+            }
+
+            tbody tr:hover {
+                background: rgba(255, 255, 255, 0.5);
+            }
+
+            th {
+                text-align: left;
+                font-family: var(--font-sans);
+                text-transform: uppercase;
+                letter-spacing: 0.1em;
+                font-size: 90%;
+                font-weight: 600;
+            }
+
+            th,
+            td {
+                border-bottom: 1px solid var(--color-border);
+                padding: 0.4rem 0.8rem;
+            }
+
+            table th:nth-child(1),
+            table td:nth-child(1) {
+                text-align: center;
+                padding: 0.4rem 0.2rem;
+            }
+
+            table:first-of-type th:nth-child(3), table:first-of-type th:nth-child(4), table:first-of-type td:nth-child(3), table:first-of-type td:nth-child(4){
+                text-align: center;
+            }
+
+            td span {
+                font-size: 90%;
+                color: rgba(0, 0, 0, 0.5);
+            }
+
+            /* --- Otros elementos --- */
+            object {
+                display: block;
+                margin: 1rem -1rem;
+                width: calc(100% + 2rem);
+                height: auto;
+                aspect-ratio: 880 / 580; /* debe coincidir con el viewBox de viz.svg */
+            }
+
+            svg.grafico { 
+                display: block;
+                margin: 1rem -1rem 3rem -1rem;
+                width: calc(100% + 2rem);
+                height: auto;
+                aspect-ratio: 880 / 580;
+            }
+
+            canvas {
+                margin-bottom: 3rem;
+                margin-right: 1rem;
+            }
+
+            .nota {
+                background: var(--color-bg-nota);
+                border-left: 3px solid var(--color-border);
+                padding: 0.7rem 0.5rem;
+                padding-left: 0.75rem;
+                font-size: 0.95rem;
+                margin: 2rem -0.5rem;
+                line-height: 1.3;
+            }
+
+            .nota span {
+                font-weight: 700;
+            }
+
+            dl {
+                font-family: var(--font-sans);
+                font-size: 80%;
+                letter-spacing: 0.025rem;
+                margin-bottom: 10vh;
+            }
+
+            dl dt {
+                font-weight: 700;
+            }
+
+            dl dd {
+                font-size: 90%;
+                color: var(--color-text-light);
+                margin-top: 0.25rem;
+            }
+
+            dl dd em {
+                font-style: normal;
+                font-weight: 700;
+                color: var(--color-text-light);
+				svg.grafico .area { transition: fill-opacity 0.3s; }
+svg.grafico .area:hover { fill-opacity: 0.5; }
+svg.grafico .item { cursor: pointer; transition: opacity 0.3s; }
+.nones { display: none; }
+.apagado { opacity: 0.3; }
+            }
+
+        </style>
+    </head>
+
+    <body>
+        <div class="container">
+            <h1>Arte, Diseño y Reputación Académica <abbr title="Quacquarelli Symonds">QS</abbr></h1>
+
+            <h2>El Desempeño de las univerisdades en el Ranking QS 2026</h2>
+
+            <h5>Por <a href="https://github.com/karprincho">Marthin Rivera Bustos</a></h5>
+
+            <h6><time datetime="2026-11-06T17:00-03:00">Publicado el viernes 6 de noviembre de 2026 &nbsp;&nbsp;&nbsp; 17:00 h (GMT-3)</time></h6>
+
+            <p>El <em>Ranking <abbr title="Quacquarelli Symonds">QS</abbr></em> es un sistema de clasificación académica desarrollado por <em>Quacquarelli Symonds</em>. Nació en 2004, en alianza con <em>Times Higher Education</em>, bajo el nombre <em><abbr title="Times Higher Education - Quacquarelli Symonds">THE-QS</abbr> World University Rankings</em>. Tras la separación de ambas entidades en 2009 adoptó su estructura actual, que tiene dos vertientes: <em><abbr title="Quacquarelli Symonds">QS</abbr> World University Rankings</em>, centrada en el desempeño institucional general, y <em><abbr title="Quacquarelli Symonds">QS</abbr> World University Rankings by Subject</em>, orientada a la evaluación académica por disciplinas.</p>
+
+            <p>La edición vigente del ranking institucional se publicó en junio de 2026. <a href="https://www.topuniversities.com/world-university-rankings" target="_blank" rel="noopener">Evaluó y posicionó 1.504 instituciones de educación superior de todo el mundo, 17 de ellas chilenas</a>.</p>
+
+            <p>La edición vigente del ranking por disciplina se publicó en marzo de 2026. <a href="https://www.topuniversities.com/university-subject-rankings/art-design" target="_blank" rel="noopener">En Arte y Diseño evaluó y posicionó 302 instituciones, 3 de ellas chilenas</a>.
+            </p>
+
+            <hr/>
+
+            <h3 id="universidades">Las mejores universidades del mundo según <abbr title="Quacquarelli Symonds">QS</abbr></h3>
+
+            <p>En el ranking institucional, la Pontificia Universidad Católica de Chile (puesto 119) y la Universidad de Chile (puesto 185) figuran entre las cinco mejores de Hispanoamérica. Con 17 instituciones entre las 1.504 evaluadas, Chile ocupa además el quinto lugar de América en número de instituciones representadas. Estos resultados se miden, entre otros indicadores, por prestigio académico, valoración de los empleadores, cantidad de docentes por estudiante e impacto de la investigación. Son fruto de políticas públicas que hoy enfrentan la perspectiva de recortes presupuestarios. Una situacion que pone en riesgo décadas de avance,años de lucha por estudiantes y ademas la excelencia e investigación científica <strong></p>
+
+            <h4>América, Europa y otros continentes</h4>
+
+            <p>El siguiente gráfico muestra cómo se distribuyen, por continente y país, las 100 mejores universidades del mundo. Se puede evidenciar como Europa es el continente con más universidades, sin embargo el país que más contine es Estados Unidos. Los números de la parte externa del gráfico son el lugar en el que se encuentran dentro del ranking siendo  América la más alta, ya que concentra los puestos 1,3,5 y 7  los 10 más altos . <strong></p>
+
+            <object data="viz.svg" type="image/svg+xml"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 680"><rect width="1005" height="600" x="0" y="0" fill="#FFFFFF" id="background"/><g transform="translate(402.5,300)" id="viz"><path fill="#1f77b4" display="" d="M1,-142.997A143,143,0,0,1,136.307,43.237L69.254,21.451A72.5,72.5,0,0,0,1,-72.493Z"><title>Americas</title></path><path fill="#2ca02c" display="" d="M135.689,45.139A143,143,0,0,1,-120.2,77.466L-60.672,39.688A72.5,72.5,0,0,0,68.636,23.353Z"><title>Europe</title></path><path fill="#ff7f0e" display="" d="M-121.272,75.777A143,143,0,0,1,-84.86,-115.099L-43.419,-58.06A72.5,72.5,0,0,0,-61.744,37.999Z"><title>Asia</title></path><path fill="#d62728" display="" d="M-83.242,-116.274A143,143,0,0,1,-1,-142.997L-1,-72.493A72.5,72.5,0,0,0,-41.801,-59.236Z"><title>Oceania</title></path><path fill="#1f77b4" display="" d="M1,-215.498A215.5,215.5,0,0,1,215.498,-1L144.997,-1A145,145,0,0,0,1,-144.997Z"><title>United States of America</title></path><path fill="#1f77b4" display="" d="M215.498,1A215.5,215.5,0,0,1,208.976,52.624L140.69,35.091A145,145,0,0,0,144.997,1Z"><title>Canada</title></path><path fill="#1f77b4" display="" d="M208.479,54.561A215.5,215.5,0,0,1,205.259,65.641L138.209,43.855A145,145,0,0,0,140.193,37.028Z"><title>Argentina</title></path><path fill="#2ca02c" display="" d="M204.641,67.543A215.5,215.5,0,0,1,54.561,208.479L37.028,140.193A145,145,0,0,0,137.591,45.757Z"><title>United Kingdom</title></path><path fill="#2ca02c" display="" d="M52.624,208.976A215.5,215.5,0,0,1,14.529,215.01L10.102,144.648A145,145,0,0,0,35.091,140.69Z"><title>Switzerland</title></path><path fill="#2ca02c" display="" d="M12.533,215.135A215.5,215.5,0,0,1,-39.398,211.868L-26.187,142.616A145,145,0,0,0,8.106,144.773Z"><title>Germany</title></path><path fill="#2ca02c" display="" d="M-41.363,211.493A215.5,215.5,0,0,1,-90.85,195.414L-60.832,131.623A145,145,0,0,0,-28.152,142.241Z"><title>France</title></path><path fill="#2ca02c" display="" d="M-92.659,194.562A215.5,215.5,0,0,1,-114.625,182.487L-76.849,122.96A145,145,0,0,0,-62.641,130.771Z"><title>Netherlands</title></path><path fill="#2ca02c" display="" d="M-116.314,181.415A215.5,215.5,0,0,1,-125.857,174.929L-84.418,117.892A145,145,0,0,0,-78.537,121.889Z"><title>Belgium</title></path><path fill="#2ca02c" display="" d="M-127.475,173.754A215.5,215.5,0,0,1,-156.407,148.247L-105.013,99.986A145,145,0,0,0,-86.036,116.717Z"><title>Sweden</title></path><path fill="#2ca02c" display="" d="M-157.776,146.789A215.5,215.5,0,0,1,-165.406,138.134L-111.084,93.195A145,145,0,0,0,-106.382,98.528Z"><title>Ireland</title></path><path fill="#2ca02c" display="" d="M-166.681,136.593A215.5,215.5,0,0,1,-173.754,127.475L-116.717,86.036A145,145,0,0,0,-112.359,91.654Z"><title>Italy</title></path><path fill="#2ca02c" display="" d="M-174.929,125.857A215.5,215.5,0,0,1,-181.415,116.314L-121.889,78.537A145,145,0,0,0,-117.892,84.418Z"><title>Denmark</title></path><path fill="#ff7f0e" display="" d="M-182.487,114.625A215.5,215.5,0,0,1,-194.562,92.659L-130.771,62.641A145,145,0,0,0,-122.96,76.849Z"><title>Singapore</title></path><path fill="#ff7f0e" display="" d="M-195.414,90.85A215.5,215.5,0,0,1,-213.673,28.001L-143.728,19.165A145,145,0,0,0,-131.623,60.832Z"><title>Hong Kong SAR, China</title></path><path fill="#ff7f0e" display="" d="M-213.924,26.017A215.5,215.5,0,0,1,-208.976,-52.624L-140.69,-35.091A145,145,0,0,0,-143.979,17.181Z"><title>China (Mainland)</title></path><path fill="#ff7f0e" display="" d="M-208.479,-54.561A215.5,215.5,0,0,1,-189.324,-102.94L-127.543,-68.976A145,145,0,0,0,-140.193,-37.028Z"><title>Republic of Korea</title></path><path fill="#ff7f0e" display="" d="M-188.36,-104.693A215.5,215.5,0,0,1,-157.776,-146.789L-106.382,-98.528A145,145,0,0,0,-126.58,-70.729Z"><title>Japan</title></path><path fill="#ff7f0e" display="" d="M-156.407,-148.247A215.5,215.5,0,0,1,-148.247,-156.407L-99.986,-105.013A145,145,0,0,0,-105.013,-99.986Z"><title>Taiwan</title></path><path fill="#ff7f0e" display="" d="M-146.789,-157.776A215.5,215.5,0,0,1,-138.134,-165.406L-93.195,-111.084A145,145,0,0,0,-98.528,-106.382Z"><title>Malaysia</title></path><path fill="#ff7f0e" display="" d="M-136.593,-166.681A215.5,215.5,0,0,1,-127.475,-173.754L-86.036,-116.717A145,145,0,0,0,-91.654,-112.359Z"><title>Saudi Arabia</title></path><path fill="#d62728" display="" d="M-125.857,-174.929A215.5,215.5,0,0,1,-14.529,-215.01L-10.102,-144.648A145,145,0,0,0,-84.418,-117.892Z"><title>Australia</title></path><path fill="#d62728" display="" d="M-12.533,-215.135A215.5,215.5,0,0,1,-1,-215.498L-1,-144.997A145,145,0,0,0,-8.106,-144.773Z"><title>New Zealand</title></path><path fill="#1f77b4" display="" d="M1,-287.998A288,288,0,0,1,17.086,-287.493L12.659,-217.131A217.5,217.5,0,0,0,1,-217.498Z"><title>1</title></path><path fill="#1f77b4" display="" d="M19.082,-287.367A288,288,0,0,1,35.104,-285.853L26.268,-215.908A217.5,217.5,0,0,0,14.655,-217.006Z"><title>3</title></path><path fill="#1f77b4" display="" d="M37.088,-285.602A288,288,0,0,1,52.983,-283.084L39.773,-213.833A217.5,217.5,0,0,0,28.252,-215.657Z"><title>5</title></path><path fill="#1f77b4" display="" d="M54.948,-282.71A288,288,0,0,1,70.654,-279.199L53.121,-210.913A217.5,217.5,0,0,0,41.737,-213.458Z"><title>7</title></path><path fill="#1f77b4" display="" d="M72.591,-278.702A288,288,0,0,1,88.045,-274.212L66.259,-207.162A217.5,217.5,0,0,0,55.058,-210.416Z"><title>15</title></path><path fill="#1f77b4" display="" d="M89.947,-273.594A288,288,0,0,1,105.089,-268.142L79.136,-202.592A217.5,217.5,0,0,0,68.162,-206.544Z"><title>16</title></path><path fill="#1f77b4" display="" d="M106.949,-267.406A288,288,0,0,1,121.719,-261.014L91.701,-197.224A217.5,217.5,0,0,0,80.996,-201.856Z"><title>17</title></path><path fill="#1f77b4" display="" d="M123.529,-260.163A288,288,0,0,1,137.868,-252.857L103.904,-191.076A217.5,217.5,0,0,0,93.511,-196.372Z"><title>20</title></path><path fill="#1f77b4" display="" d="M139.621,-251.893A288,288,0,0,1,153.473,-243.701L115.697,-184.175A217.5,217.5,0,0,0,105.657,-190.113Z"><title>21</title></path><path fill="#1f77b4" display="" d="M155.162,-242.629A288,288,0,0,1,168.472,-233.583L127.033,-176.547A217.5,217.5,0,0,0,117.385,-183.104Z"><title>24</title></path><path fill="#1f77b4" display="" d="M170.09,-232.408A288,288,0,0,1,182.806,-222.544L137.868,-168.222A217.5,217.5,0,0,0,128.651,-175.372Z"><title>27</title></path><path fill="#1f77b4" display="" d="M184.348,-221.269A288,288,0,0,1,196.419,-210.626L148.158,-159.234A217.5,217.5,0,0,0,139.409,-166.947Z"><title>43</title></path><path fill="#1f77b4" display="" d="M197.877,-209.257A288,288,0,0,1,209.257,-197.877L157.864,-149.616A217.5,217.5,0,0,0,149.616,-157.864Z"><title>45</title></path><path fill="#1f77b4" display="" d="M210.626,-196.419A288,288,0,0,1,221.269,-184.348L166.947,-139.409A217.5,217.5,0,0,0,159.234,-148.158Z"><title>49</title></path><path fill="#1f77b4" display="" d="M222.544,-182.806A288,288,0,0,1,232.408,-170.09L175.372,-128.651A217.5,217.5,0,0,0,168.222,-137.868Z"><title>51</title></path><path fill="#1f77b4" display="" d="M233.583,-168.472A288,288,0,0,1,242.629,-155.162L183.104,-117.385A217.5,217.5,0,0,0,176.547,-127.033Z"><title>55</title></path><path fill="#1f77b4" display="" d="M243.701,-153.473A288,288,0,0,1,251.893,-139.621L190.113,-105.657A217.5,217.5,0,0,0,184.175,-115.697Z"><title>58</title></path><path fill="#1f77b4" display="" d="M252.857,-137.868A288,288,0,0,1,260.163,-123.529L196.372,-93.511A217.5,217.5,0,0,0,191.076,-103.904Z"><title>66</title></path><path fill="#1f77b4" display="" d="M261.014,-121.719A288,288,0,0,1,267.406,-106.949L201.856,-80.996A217.5,217.5,0,0,0,197.224,-91.701Z"><title>70</title></path><path fill="#1f77b4" display="" d="M268.142,-105.089A288,288,0,0,1,273.594,-89.947L206.544,-68.162A217.5,217.5,0,0,0,202.592,-79.136Z"><title>72</title></path><path fill="#1f77b4" display="" d="M274.212,-88.045A288,288,0,0,1,278.702,-72.591L210.416,-55.058A217.5,217.5,0,0,0,207.162,-66.259Z"><title>74</title></path><path fill="#1f77b4" display="" d="M279.199,-70.654A288,288,0,0,1,282.71,-54.948L213.458,-41.737A217.5,217.5,0,0,0,210.913,-53.121Z"><title>81</title></path><path fill="#1f77b4" display="" d="M283.084,-52.983A288,288,0,0,1,285.602,-37.088L215.657,-28.252A217.5,217.5,0,0,0,213.833,-39.773Z"><title>92</title></path><path fill="#1f77b4" display="" d="M285.853,-35.104A288,288,0,0,1,287.367,-19.082L217.006,-14.655A217.5,217.5,0,0,0,215.908,-26.268Z"><title>93</title></path><path fill="#1f77b4" display="" d="M287.493,-17.086A288,288,0,0,1,287.998,-1L217.498,-1A217.5,217.5,0,0,0,217.131,-12.659Z"><title>94</title></path><path fill="#1f77b4" display="" d="M287.998,1A288,288,0,0,1,287.493,17.086L217.131,12.659A217.5,217.5,0,0,0,217.498,1Z"><title>30</title></path><path fill="#1f77b4" display="" d="M287.367,19.082A288,288,0,0,1,285.853,35.104L215.908,26.268A217.5,217.5,0,0,0,217.006,14.655Z"><title>32</title></path><path fill="#1f77b4" display="" d="M285.602,37.088A288,288,0,0,1,283.084,52.983L213.833,39.773A217.5,217.5,0,0,0,215.657,28.252Z"><title>46</title></path><path fill="#1f77b4" display="" d="M282.71,54.948A288,288,0,0,1,279.199,70.654L210.913,53.121A217.5,217.5,0,0,0,213.458,41.737Z"><title>96</title></path><path fill="#1f77b4" display="" d="M278.702,72.591A288,288,0,0,1,274.212,88.045L207.162,66.259A217.5,217.5,0,0,0,210.416,55.058Z"><title>84</title></path><path fill="#2ca02c" display="" d="M273.594,89.947A288,288,0,0,1,268.142,105.089L202.592,79.136A217.5,217.5,0,0,0,206.544,68.162Z"><title>2</title></path><path fill="#2ca02c" display="" d="M267.406,106.949A288,288,0,0,1,261.014,121.719L197.224,91.701A217.5,217.5,0,0,0,201.856,80.996Z"><title>4</title></path><path fill="#2ca02c" display="" d="M260.163,123.529A288,288,0,0,1,252.857,137.868L191.076,103.904A217.5,217.5,0,0,0,196.372,93.511Z"><title>6</title></path><path fill="#2ca02c" display="" d="M251.893,139.621A288,288,0,0,1,243.701,153.473L184.175,115.697A217.5,217.5,0,0,0,190.113,105.657Z"><title>9</title></path><path fill="#2ca02c" display="" d="M242.629,155.162A288,288,0,0,1,233.583,168.472L176.547,127.033A217.5,217.5,0,0,0,183.104,117.385Z"><title>35</title></path><path fill="#2ca02c" display="" d="M232.408,170.09A288,288,0,0,1,222.544,182.806L168.222,137.868A217.5,217.5,0,0,0,175.372,128.651Z"><title>37</title></path><path fill="#2ca02c" display="" d="M221.269,184.348A288,288,0,0,1,210.626,196.419L159.234,148.158A217.5,217.5,0,0,0,166.947,139.409Z"><title>40</title></path><path fill="#2ca02c" display="" d="M209.257,197.877A288,288,0,0,1,197.877,209.257L149.616,157.864A217.5,217.5,0,0,0,157.864,149.616Z"><title>57</title></path><path fill="#2ca02c" display="" d="M196.419,210.626A288,288,0,0,1,184.348,221.269L139.409,166.947A217.5,217.5,0,0,0,148.158,159.234Z"><title>62</title></path><path fill="#2ca02c" display="" d="M182.806,222.544A288,288,0,0,1,170.09,232.408L128.651,175.372A217.5,217.5,0,0,0,137.868,168.222Z"><title>68</title></path><path fill="#2ca02c" display="" d="M168.472,233.583A288,288,0,0,1,155.162,242.629L117.385,183.104A217.5,217.5,0,0,0,127.033,176.547Z"><title>69</title></path><path fill="#2ca02c" display="" d="M153.473,243.701A288,288,0,0,1,139.621,251.893L105.657,190.113A217.5,217.5,0,0,0,115.697,184.175Z"><title>78</title></path><path fill="#2ca02c" display="" d="M137.868,252.857A288,288,0,0,1,123.529,260.163L93.511,196.372A217.5,217.5,0,0,0,103.904,191.076Z"><title>80</title></path><path fill="#2ca02c" display="" d="M121.719,261.014A288,288,0,0,1,106.949,267.406L80.996,201.856A217.5,217.5,0,0,0,91.701,197.224Z"><title>83</title></path><path fill="#2ca02c" display="" d="M105.089,268.142A288,288,0,0,1,89.947,273.594L68.162,206.544A217.5,217.5,0,0,0,79.136,202.592Z"><title>85</title></path><path fill="#2ca02c" display="" d="M88.045,274.212A288,288,0,0,1,72.591,278.702L55.058,210.416A217.5,217.5,0,0,0,66.259,207.162Z"><title>98</title></path><path fill="#2ca02c" display="" d="M70.654,279.199A288,288,0,0,1,54.948,282.71L41.737,213.458A217.5,217.5,0,0,0,53.121,210.913Z"><title>8</title></path><path fill="#2ca02c" display="" d="M52.983,283.084A288,288,0,0,1,37.088,285.602L28.252,215.657A217.5,217.5,0,0,0,39.773,213.833Z"><title>22</title></path><path fill="#2ca02c" display="" d="M35.104,285.853A288,288,0,0,1,19.082,287.367L14.655,217.006A217.5,217.5,0,0,0,26.268,215.908Z"><title>100</title></path><path fill="#2ca02c" display="" d="M17.086,287.493A288,288,0,0,1,1,287.998L1,217.498A217.5,217.5,0,0,0,12.659,217.131Z"><title>25</title></path><path fill="#2ca02c" display="" d="M-1,287.998A288,288,0,0,1,-17.086,287.493L-12.659,217.131A217.5,217.5,0,0,0,-1,217.498Z"><title>61</title></path><path fill="#2ca02c" display="" d="M-19.082,287.367A288,288,0,0,1,-35.104,285.853L-26.268,215.908A217.5,217.5,0,0,0,-14.655,217.006Z"><title>86</title></path><path fill="#2ca02c" display="" d="M-37.088,285.602A288,288,0,0,1,-52.983,283.084L-39.773,213.833A217.5,217.5,0,0,0,-28.252,215.657Z"><title>99</title></path><path fill="#2ca02c" display="" d="M-54.948,282.71A288,288,0,0,1,-70.654,279.199L-53.121,210.913A217.5,217.5,0,0,0,-41.737,213.458Z"><title>34</title></path><path fill="#2ca02c" display="" d="M-72.591,278.702A288,288,0,0,1,-88.045,274.212L-66.259,207.162A217.5,217.5,0,0,0,-55.058,210.416Z"><title>44</title></path><path fill="#2ca02c" display="" d="M-89.947,273.594A288,288,0,0,1,-105.089,268.142L-79.136,202.592A217.5,217.5,0,0,0,-68.162,206.544Z"><title>73</title></path><path fill="#2ca02c" display="" d="M-106.949,267.406A288,288,0,0,1,-121.719,261.014L-91.701,197.224A217.5,217.5,0,0,0,-80.996,201.856Z"><title>76</title></path><path fill="#2ca02c" display="" d="M-123.529,260.163A288,288,0,0,1,-137.868,252.857L-103.904,191.076A217.5,217.5,0,0,0,-93.511,196.372Z"><title>48</title></path><path fill="#2ca02c" display="" d="M-139.621,251.893A288,288,0,0,1,-153.473,243.701L-115.697,184.175A217.5,217.5,0,0,0,-105.657,190.113Z"><title>60</title></path><path fill="#2ca02c" display="" d="M-155.162,242.629A288,288,0,0,1,-168.472,233.583L-127.033,176.547A217.5,217.5,0,0,0,-117.385,183.104Z"><title>59</title></path><path fill="#2ca02c" display="" d="M-170.09,232.408A288,288,0,0,1,-182.806,222.544L-137.868,168.222A217.5,217.5,0,0,0,-128.651,175.372Z"><title>71</title></path><path fill="#2ca02c" display="" d="M-184.348,221.269A288,288,0,0,1,-196.419,210.626L-148.158,159.234A217.5,217.5,0,0,0,-139.409,166.947Z"><title>82</title></path><path fill="#2ca02c" display="" d="M-197.877,209.257A288,288,0,0,1,-209.257,197.877L-157.864,149.616A217.5,217.5,0,0,0,-149.616,157.864Z"><title>89</title></path><path fill="#2ca02c" display="" d="M-210.626,196.419A288,288,0,0,1,-221.269,184.348L-166.947,139.409A217.5,217.5,0,0,0,-159.234,148.158Z"><title>75</title></path><path fill="#2ca02c" display="" d="M-222.544,182.806A288,288,0,0,1,-232.408,170.09L-175.372,128.651A217.5,217.5,0,0,0,-168.222,137.868Z"><title>87</title></path><path fill="#2ca02c" display="" d="M-233.583,168.472A288,288,0,0,1,-242.629,155.162L-183.104,117.385A217.5,217.5,0,0,0,-176.547,127.033Z"><title>91</title></path><path fill="#ff7f0e" display="" d="M-243.701,153.473A288,288,0,0,1,-251.893,139.621L-190.113,105.657A217.5,217.5,0,0,0,-184.175,115.697Z"><title>10</title></path><path fill="#ff7f0e" display="" d="M-252.857,137.868A288,288,0,0,1,-260.163,123.529L-196.372,93.511A217.5,217.5,0,0,0,-191.076,103.904Z"><title>12</title></path><path fill="#ff7f0e" display="" d="M-261.014,121.719A288,288,0,0,1,-267.406,106.949L-201.856,80.996A217.5,217.5,0,0,0,-197.224,91.701Z"><title>11</title></path><path fill="#ff7f0e" display="" d="M-268.142,105.089A288,288,0,0,1,-273.594,89.947L-206.544,68.162A217.5,217.5,0,0,0,-202.592,79.136Z"><title>18</title></path><path fill="#ff7f0e" display="" d="M-274.212,88.045A288,288,0,0,1,-278.702,72.591L-210.416,55.058A217.5,217.5,0,0,0,-207.162,66.259Z"><title>33</title></path><path fill="#ff7f0e" display="" d="M-279.199,70.654A288,288,0,0,1,-282.71,54.948L-213.458,41.737A217.5,217.5,0,0,0,-210.913,53.121Z"><title>50</title></path><path fill="#ff7f0e" display="" d="M-283.084,52.983A288,288,0,0,1,-285.602,37.088L-215.657,28.252A217.5,217.5,0,0,0,-213.833,39.773Z"><title>52</title></path><path fill="#ff7f0e" display="" d="M-285.853,35.104A288,288,0,0,1,-287.367,19.082L-217.006,14.655A217.5,217.5,0,0,0,-215.908,26.268Z"><title>13</title></path><path fill="#ff7f0e" display="" d="M-287.493,17.086A288,288,0,0,1,-287.998,1L-217.498,1A217.5,217.5,0,0,0,-217.131,12.659Z"><title>14</title></path><path fill="#ff7f0e" display="" d="M-287.998,-1A288,288,0,0,1,-287.493,-17.086L-217.131,-12.659A217.5,217.5,0,0,0,-217.498,-1Z"><title>26</title></path><path fill="#ff7f0e" display="" d="M-287.367,-19.082A288,288,0,0,1,-285.853,-35.104L-215.908,-26.268A217.5,217.5,0,0,0,-217.006,-14.655Z"><title>36</title></path><path fill="#ff7f0e" display="" d="M-285.602,-37.088A288,288,0,0,1,-283.084,-52.983L-213.833,-39.773A217.5,217.5,0,0,0,-215.657,-28.252Z"><title>47</title></path><path fill="#ff7f0e" display="" d="M-282.71,-54.948A288,288,0,0,1,-279.199,-70.654L-210.913,-53.121A217.5,217.5,0,0,0,-213.458,-41.737Z"><title>90</title></path><path fill="#ff7f0e" display="" d="M-278.702,-72.591A288,288,0,0,1,-274.212,-88.045L-207.162,-66.259A217.5,217.5,0,0,0,-210.416,-55.058Z"><title>38</title></path><path fill="#ff7f0e" display="" d="M-273.594,-89.947A288,288,0,0,1,-268.142,-105.089L-202.592,-79.136A217.5,217.5,0,0,0,-206.544,-68.162Z"><title>42</title></path><path fill="#ff7f0e" display="" d="M-267.406,-106.949A288,288,0,0,1,-261.014,-121.719L-197.224,-91.701A217.5,217.5,0,0,0,-201.856,-80.996Z"><title>53</title></path><path fill="#ff7f0e" display="" d="M-260.163,-123.529A288,288,0,0,1,-252.857,-137.868L-191.076,-103.904A217.5,217.5,0,0,0,-196.372,-93.511Z"><title>65</title></path><path fill="#ff7f0e" display="" d="M-251.893,-139.621A288,288,0,0,1,-243.701,-153.473L-184.175,-115.697A217.5,217.5,0,0,0,-190.113,-105.657Z"><title>39</title></path><path fill="#ff7f0e" display="" d="M-242.629,-155.162A288,288,0,0,1,-233.583,-168.472L-176.547,-127.033A217.5,217.5,0,0,0,-183.104,-117.385Z"><title>64</title></path><path fill="#ff7f0e" display="" d="M-232.408,-170.09A288,288,0,0,1,-222.544,-182.806L-168.222,-137.868A217.5,217.5,0,0,0,-175.372,-128.651Z"><title>95</title></path><path fill="#ff7f0e" display="" d="M-221.269,-184.348A288,288,0,0,1,-210.626,-196.419L-159.234,-148.158A217.5,217.5,0,0,0,-166.947,-139.409Z"><title>97</title></path><path fill="#ff7f0e" display="" d="M-209.257,-197.877A288,288,0,0,1,-197.877,-209.257L-149.616,-157.864A217.5,217.5,0,0,0,-157.864,-149.616Z"><title>54</title></path><path fill="#ff7f0e" display="" d="M-196.419,-210.626A288,288,0,0,1,-184.348,-221.269L-139.409,-166.947A217.5,217.5,0,0,0,-148.158,-159.234Z"><title>56</title></path><path fill="#ff7f0e" display="" d="M-182.806,-222.544A288,288,0,0,1,-170.09,-232.408L-128.651,-175.372A217.5,217.5,0,0,0,-137.868,-168.222Z"><title>63</title></path><path fill="#d62728" display="" d="M-168.472,-233.583A288,288,0,0,1,-155.162,-242.629L-117.385,-183.104A217.5,217.5,0,0,0,-127.033,-176.547Z"><title>19</title></path><path fill="#d62728" display="" d="M-153.473,-243.701A288,288,0,0,1,-139.621,-251.893L-105.657,-190.113A217.5,217.5,0,0,0,-115.697,-184.175Z"><title>23</title></path><path fill="#d62728" display="" d="M-137.868,-252.857A288,288,0,0,1,-123.529,-260.163L-93.511,-196.372A217.5,217.5,0,0,0,-103.904,-191.076Z"><title>28</title></path><path fill="#d62728" display="" d="M-121.719,-261.014A288,288,0,0,1,-106.949,-267.406L-80.996,-201.856A217.5,217.5,0,0,0,-91.701,-197.224Z"><title>29</title></path><path fill="#d62728" display="" d="M-105.089,-268.142A288,288,0,0,1,-89.947,-273.594L-68.162,-206.544A217.5,217.5,0,0,0,-79.136,-202.592Z"><title>31</title></path><path fill="#d62728" display="" d="M-88.045,-274.212A288,288,0,0,1,-72.591,-278.702L-55.058,-210.416A217.5,217.5,0,0,0,-66.259,-207.162Z"><title>41</title></path><path fill="#d62728" display="" d="M-70.654,-279.199A288,288,0,0,1,-54.948,-282.71L-41.737,-213.458A217.5,217.5,0,0,0,-53.121,-210.913Z"><title>77</title></path><path fill="#d62728" display="" d="M-52.983,-283.084A288,288,0,0,1,-37.088,-285.602L-28.252,-215.657A217.5,217.5,0,0,0,-39.773,-213.833Z"><title>79</title></path><path fill="#d62728" display="" d="M-35.104,-285.853A288,288,0,0,1,-19.082,-287.367L-14.655,-217.006A217.5,217.5,0,0,0,-26.268,-215.908Z"><title>88</title></path><path fill="#d62728" display="" d="M-17.086,-287.493A288,288,0,0,1,-1,-287.998L-1,-217.498A217.5,217.5,0,0,0,-12.659,-217.131Z"><title>67</title></path></g><g id="labels" transform="translate(402.5,300)" text-anchor="middle"><text transform="rotate(90) translate(36.25,0) rotate(180)"><tspan x="0" y="4" style="font-family: Arial, sans-serif; font-size: 10px; fill: black; font-weight: normal; font-style: italic;"/></text><text transform="rotate(-35.99999999999999) translate(108.75,0) rotate(0)"><tspan x="0" y="4" style="font-family: Arial, sans-serif; font-size: 10px; fill: black; font-weight: normal; font-style: italic;">Americas</tspan></text><text transform="rotate(82.80000000000001) translate(108.75,0) rotate(0)"><tspan x="0" y="4" style="font-family: Arial, sans-serif; font-size: 10px; fill: black; font-weight: normal; font-style: italic;">Europe</tspan></text><text transform="rotate(190.8) translate(108.75,0) rotate(180)"><tspan x="0" y="4" style="font-family: Arial, sans-serif; font-size: 10px; fill: black; font-weight: normal; font-style: italic;">Asia</tspan></text><text transform="rotate(252.00000000000006) translate(108.75,0) rotate(180)"><tspan x="0" y="4" style="font-family: Arial, sans-serif; font-size: 10px; fill: black; font-weight: normal; font-style: italic;">Oceania</tspan></text><text transform="rotate(-44.99999999999999) translate(181.25,0) rotate(0)"><tspan x="0" y="4" style="font-family: Arial, sans-serif; font-size: 10px; fill: black; font-weight: normal; font-style: italic;">United States of America</tspan></text><text transform="rotate(7.200000000000003) translate(181.25,0) rotate(0)"><tspan x="0" y="4" style="font-family: Arial, sans-serif; font-size: 10px; fill: black; font-weight: normal; font-style: italic;">Canada</tspan></text><text transform="rotate(16.20000000000003) translate(181.25,0) rotate(0)"><tspan x="0" y="4" style="font-family: Arial, sans-serif; font-size: 10px; fill: black; font-weight: normal; font-style: italic;">Argentina</tspan></text><text transform="rotate(46.80000000000001) translate(181.25,0) rotate(0)"><tspan x="0" y="4" style="font-family: Arial, sans-serif; font-size: 10px; fill: black; font-weight: normal; font-style: italic;">United Kingdom</tspan></text><text transform="rotate(81.00000000000003) translate(181.25,0) rotate(0)"><tspan x="0" y="4" style="font-family: Arial, sans-serif; font-size: 10px; fill: black; font-weight: normal; font-style: italic;">Switzerland</tspan></text><text transform="rotate(93.60000000000005) translate(181.25,0) rotate(180)"><tspan x="0" y="4" style="font-family: Arial, sans-serif; font-size: 10px; fill: black; font-weight: normal; font-style: italic;">Germany</tspan></text><text transform="rotate(108.00000000000003) translate(181.25,0) rotate(180)"><tspan x="0" y="4" style="font-family: Arial, sans-serif; font-size: 10px; fill: black; font-weight: normal; font-style: italic;">France</tspan></text><text transform="rotate(118.80000000000001) translate(181.25,0) rotate(180)"><tspan x="0" y="4" style="font-family: Arial, sans-serif; font-size: 10px; fill: black; font-weight: normal; font-style: italic;">Netherlands</tspan></text><text transform="rotate(124.20000000000002) translate(181.25,0) rotate(180)"><tspan x="0" y="4" style="font-family: Arial, sans-serif; font-size: 10px; fill: black; font-weight: normal; font-style: italic;">Belgium</tspan></text><text transform="rotate(131.40000000000003) translate(181.25,0) rotate(180)"><tspan x="0" y="4" style="font-family: Arial, sans-serif; font-size: 10px; fill: black; font-weight: normal; font-style: italic;">Sweden</tspan></text><text transform="rotate(138.60000000000002) translate(181.25,0) rotate(180)"><tspan x="0" y="4" style="font-family: Arial, sans-serif; font-size: 10px; fill: black; font-weight: normal; font-style: italic;">Ireland</tspan></text><text transform="rotate(142.2) translate(181.25,0) rotate(180)"><tspan x="0" y="4" style="font-family: Arial, sans-serif; font-size: 10px; fill: black; font-weight: normal; font-style: italic;">Italy</tspan></text><text transform="rotate(145.8) translate(181.25,0) rotate(180)"><tspan x="0" y="4" style="font-family: Arial, sans-serif; font-size: 10px; fill: black; font-weight: normal; font-style: italic;">Denmark</tspan></text><text transform="rotate(151.20000000000007) translate(181.25,0) rotate(180)"><tspan x="0" y="4" style="font-family: Arial, sans-serif; font-size: 10px; fill: black; font-weight: normal; font-style: italic;">Singapore</tspan></text><text transform="rotate(163.80000000000004) translate(181.25,0) rotate(180)"><tspan x="0" y="4" style="font-family: Arial, sans-serif; font-size: 10px; fill: black; font-weight: normal; font-style: italic;">Hong Kong SAR, China</tspan></text><text transform="rotate(183.60000000000002) translate(181.25,0) rotate(180)"><tspan x="0" y="4" style="font-family: Arial, sans-serif; font-size: 10px; fill: black; font-weight: normal; font-style: italic;">China (Mainland)</tspan></text><text transform="rotate(201.60000000000002) translate(181.25,0) rotate(180)"><tspan x="0" y="4" style="font-family: Arial, sans-serif; font-size: 10px; fill: black; font-weight: normal; font-style: italic;">Republic of Korea</tspan></text><text transform="rotate(216.00000000000006) translate(181.25,0) rotate(180)"><tspan x="0" y="4" style="font-family: Arial, sans-serif; font-size: 10px; fill: black; font-weight: normal; font-style: italic;">Japan</tspan></text><text transform="rotate(225.00000000000006) translate(181.25,0) rotate(180)"><tspan x="0" y="4" style="font-family: Arial, sans-serif; font-size: 10px; fill: black; font-weight: normal; font-style: italic;">Taiwan</tspan></text><text transform="rotate(228.60000000000002) translate(181.25,0) rotate(180)"><tspan x="0" y="4" style="font-family: Arial, sans-serif; font-size: 10px; fill: black; font-weight: normal; font-style: italic;">Malaysia</tspan></text><text transform="rotate(232.20000000000005) translate(181.25,0) rotate(180)"><tspan x="0" y="4" style="font-family: Arial, sans-serif; font-size: 10px; fill: black; font-weight: normal; font-style: italic;">Saudi Arabia</tspan></text><text transform="rotate(250.20000000000005) translate(181.25,0) rotate(180)"><tspan x="0" y="4" style="font-family: Arial, sans-serif; font-size: 10px; fill: black; font-weight: normal; font-style: italic;">Australia</tspan></text><text transform="rotate(268.2000000000001) translate(181.25,0) rotate(180)"><tspan x="0" y="4" style="font-family: Arial, sans-serif; font-size: 10px; fill: black; font-weight: normal; font-style: italic;">New Zealand</tspan></text><text transform="rotate(-88.2) translate(253.75,0) rotate(0)"><tspan x="0" y="4" style="font-family: Arial, sans-serif; font-size: 10px; fill: black; font-weight: normal; font-style: italic;">1</tspan></text><text transform="rotate(-84.6) translate(253.75,0) rotate(0)"><tspan x="0" y="4" style="font-family: Arial, sans-serif; font-size: 10px; fill: black; font-weight: normal; font-style: italic;">3</tspan></text><text transform="rotate(-81) translate(253.75,0) rotate(0)"><tspan x="0" y="4" style="font-family: Arial, sans-serif; font-size: 10px; fill: black; font-weight: normal; font-style: italic;">5</tspan></text><text transform="rotate(-77.4) translate(253.75,0) rotate(0)"><tspan x="0" y="4" style="font-family: Arial, sans-serif; font-size: 10px; fill: black; font-weight: normal; font-style: italic;">7</tspan></text><text transform="rotate(-73.8) translate(253.75,0) rotate(0)"><tspan x="0" y="4" style="font-family: Arial, sans-serif; font-size: 10px; fill: black; font-weight: normal; font-style: italic;">15</tspan></text><text transform="rotate(-70.2) translate(253.75,0) rotate(0)"><tspan x="0" y="4" style="font-family: Arial, sans-serif; font-size: 10px; fill: black; font-weight: normal; font-style: italic;">16</tspan></text><text transform="rotate(-66.60000000000001) translate(253.75,0) rotate(0)"><tspan x="0" y="4" style="font-family: Arial, sans-serif; font-size: 10px; fill: black; font-weight: normal; font-style: italic;">17</tspan></text><text transform="rotate(-63) translate(253.75,0) rotate(0)"><tspan x="0" y="4" style="font-family: Arial, sans-serif; font-size: 10px; fill: black; font-weight: normal; font-style: italic;">20</tspan></text><text transform="rotate(-59.400000000000006) translate(253.75,0) rotate(0)"><tspan x="0" y="4" style="font-family: Arial, sans-serif; font-size: 10px; fill: black; font-weight: normal; font-style: italic;">21</tspan></text><text transform="rotate(-55.800000000000004) translate(253.75,0) rotate(0)"><tspan x="0" y="4" style="font-family: Arial, sans-serif; font-size: 10px; fill: black; font-weight: normal; font-style: italic;">24</tspan></text><text transform="rotate(-52.20000000000001) translate(253.75,0) rotate(0)"><tspan x="0" y="4" style="font-family: Arial, sans-serif; font-size: 10px; fill: black; font-weight: normal; font-style: italic;">27</tspan></text><text transform="rotate(-48.6) translate(253.75,0) rotate(0)"><tspan x="0" y="4" style="font-family: Arial, sans-serif; font-size: 10px; fill: black; font-weight: normal; font-style: italic;">43</tspan></text><text transform="rotate(-45.000000000000014) translate(253.75,0) rotate(0)"><tspan x="0" y="4" style="font-family: Arial, sans-serif; font-size: 10px; fill: black; font-weight: normal; font-style: italic;">45</tspan></text><text transform="rotate(-41.400000000000006) translate(253.75,0) rotate(0)"><tspan x="0" y="4" style="font-family: Arial, sans-serif; font-size: 10px; fill: black; font-weight: normal; font-style: italic;">49</tspan></text><text transform="rotate(-37.80000000000001) translate(253.75,0) rotate(0)"><tspan x="0" y="4" style="font-family: Arial, sans-serif; font-size: 10px; fill: black; font-weight: normal; font-style: italic;">51</tspan></text><text transform="rotate(-34.20000000000001) translate(253.75,0) rotate(0)"><tspan x="0" y="4" style="font-family: Arial, sans-serif; font-size: 10px; fill: black; font-weight: normal; font-style: italic;">55</tspan></text><text transform="rotate(-30.60000000000001) translate(253.75,0) rotate(0)"><tspan x="0" y="4" style="font-family: Arial, sans-serif; font-size: 10px; fill: black; font-weight: normal; font-style: italic;">58</tspan></text><text transform="rotate(-27) translate(253.75,0) rotate(0)"><tspan x="0" y="4" style="font-family: Arial, sans-serif; font-size: 10px; fill: black; font-weight: normal; font-style: italic;">66</tspan></text><text transform="rotate(-23.39999999999999) translate(253.75,0) rotate(0)"><tspan x="0" y="4" style="font-family: Arial, sans-serif; font-size: 10px; fill: black; font-weight: normal; font-style: italic;">70</tspan></text><text transform="rotate(-19.799999999999997) translate(253.75,0) rotate(0)"><tspan x="0" y="4" style="font-family: Arial, sans-serif; font-size: 10px; fill: black; font-weight: normal; font-style: italic;">72</tspan></text><text transform="rotate(-16.199999999999974) translate(253.75,0) rotate(0)"><tspan x="0" y="4" style="font-family: Arial, sans-serif; font-size: 10px; fill: black; font-weight: normal; font-style: italic;">74</tspan></text><text transform="rotate(-12.59999999999998) translate(253.75,0) rotate(0)"><tspan x="0" y="4" style="font-family: Arial, sans-serif; font-size: 10px; fill: black; font-weight: normal; font-style: italic;">81</tspan></text><text transform="rotate(-8.999999999999972) translate(253.75,0) rotate(0)"><tspan x="0" y="4" style="font-family: Arial, sans-serif; font-size: 10px; fill: black; font-weight: normal; font-style: italic;">92</tspan></text><text transform="rotate(-5.399999999999963) translate(253.75,0) rotate(0)"><tspan x="0" y="4" style="font-family: Arial, sans-serif; font-size: 10px; fill: black; font-weight: normal; font-style: italic;">93</tspan></text><text transform="rotate(-1.7999999999999687) translate(253.75,0) rotate(0)"><tspan x="0" y="4" style="font-family: Arial, sans-serif; font-size: 10px; fill: black; font-weight: normal; font-style: italic;">94</tspan></text><text transform="rotate(1.8000000000000256) translate(253.75,0) rotate(0)"><tspan x="0" y="4" style="font-family: Arial, sans-serif; font-size: 10px; fill: black; font-weight: normal; font-style: italic;">30</tspan></text><text transform="rotate(5.40000000000002) translate(253.75,0) rotate(0)"><tspan x="0" y="4" style="font-family: Arial, sans-serif; font-size: 10px; fill: black; font-weight: normal; font-style: italic;">32</tspan></text><text transform="rotate(9.000000000000028) translate(253.75,0) rotate(0)"><tspan x="0" y="4" style="font-family: Arial, sans-serif; font-size: 10px; fill: black; font-weight: normal; font-style: italic;">46</tspan></text><text transform="rotate(12.600000000000023) translate(253.75,0) rotate(0)"><tspan x="0" y="4" style="font-family: Arial, sans-serif; font-size: 10px; fill: black; font-weight: normal; font-style: italic;">96</tspan></text><text transform="rotate(16.20000000000003) translate(253.75,0) rotate(0)"><tspan x="0" y="4" style="font-family: Arial, sans-serif; font-size: 10px; fill: black; font-weight: normal; font-style: italic;">84</tspan></text><text transform="rotate(19.80000000000001) translate(253.75,0) rotate(0)"><tspan x="0" y="4" style="font-family: Arial, sans-serif; font-size: 10px; fill: black; font-weight: normal; font-style: italic;">2</tspan></text><text transform="rotate(23.40000000000002) translate(253.75,0) rotate(0)"><tspan x="0" y="4" style="font-family: Arial, sans-serif; font-size: 10px; fill: black; font-weight: normal; font-style: italic;">4</tspan></text><text transform="rotate(27) translate(253.75,0) rotate(0)"><tspan x="0" y="4" style="font-family: Arial, sans-serif; font-size: 10px; fill: black; font-weight: normal; font-style: italic;">6</tspan></text><text transform="rotate(30.600000000000037) translate(253.75,0) rotate(0)"><tspan x="0" y="4" style="font-family: Arial, sans-serif; font-size: 10px; fill: black; font-weight: normal; font-style: italic;">9</tspan></text><text transform="rotate(34.2) translate(253.75,0) rotate(0)"><tspan x="0" y="4" style="font-family: Arial, sans-serif; font-size: 10px; fill: black; font-weight: normal; font-style: italic;">35</tspan></text><text transform="rotate(37.80000000000004) translate(253.75,0) rotate(0)"><tspan x="0" y="4" style="font-family: Arial, sans-serif; font-size: 10px; fill: black; font-weight: normal; font-style: italic;">37</tspan></text><text transform="rotate(41.400000000000034) translate(253.75,0) rotate(0)"><tspan x="0" y="4" style="font-family: Arial, sans-serif; font-size: 10px; fill: black; font-weight: normal; font-style: italic;">40</tspan></text><text transform="rotate(45.00000000000006) translate(253.75,0) rotate(0)"><tspan x="0" y="4" style="font-family: Arial, sans-serif; font-size: 10px; fill: black; font-weight: normal; font-style: italic;">57</tspan></text><text transform="rotate(48.60000000000002) translate(253.75,0) rotate(0)"><tspan x="0" y="4" style="font-family: Arial, sans-serif; font-size: 10px; fill: black; font-weight: normal; font-style: italic;">62</tspan></text><text transform="rotate(52.200000000000045) translate(253.75,0) rotate(0)"><tspan x="0" y="4" style="font-family: Arial, sans-serif; font-size: 10px; fill: black; font-weight: normal; font-style: italic;">68</tspan></text><text transform="rotate(55.80000000000004) translate(253.75,0) rotate(0)"><tspan x="0" y="4" style="font-family: Arial, sans-serif; font-size: 10px; fill: black; font-weight: normal; font-style: italic;">69</tspan></text><text transform="rotate(59.40000000000006) translate(253.75,0) rotate(0)"><tspan x="0" y="4" style="font-family: Arial, sans-serif; font-size: 10px; fill: black; font-weight: normal; font-style: italic;">78</tspan></text><text transform="rotate(63.00000000000006) translate(253.75,0) rotate(0)"><tspan x="0" y="4" style="font-family: Arial, sans-serif; font-size: 10px; fill: black; font-weight: normal; font-style: italic;">80</tspan></text><text transform="rotate(66.60000000000008) translate(253.75,0) rotate(0)"><tspan x="0" y="4" style="font-family: Arial, sans-serif; font-size: 10px; fill: black; font-weight: normal; font-style: italic;">83</tspan></text><text transform="rotate(70.20000000000007) translate(253.75,0) rotate(0)"><tspan x="0" y="4" style="font-family: Arial, sans-serif; font-size: 10px; fill: black; font-weight: normal; font-style: italic;">85</tspan></text><text transform="rotate(73.8000000000001) translate(253.75,0) rotate(0)"><tspan x="0" y="4" style="font-family: Arial, sans-serif; font-size: 10px; fill: black; font-weight: normal; font-style: italic;">98</tspan></text><text transform="rotate(77.40000000000003) translate(253.75,0) rotate(0)"><tspan x="0" y="4" style="font-family: Arial, sans-serif; font-size: 10px; fill: black; font-weight: normal; font-style: italic;">8</tspan></text><text transform="rotate(81.00000000000003) translate(253.75,0) rotate(0)"><tspan x="0" y="4" style="font-family: Arial, sans-serif; font-size: 10px; fill: black; font-weight: normal; font-style: italic;">22</tspan></text><text transform="rotate(84.60000000000005) translate(253.75,0) rotate(0)"><tspan x="0" y="4" style="font-family: Arial, sans-serif; font-size: 10px; fill: black; font-weight: normal; font-style: italic;">100</tspan></text><text transform="rotate(88.20000000000002) translate(253.75,0) rotate(0)"><tspan x="0" y="4" style="font-family: Arial, sans-serif; font-size: 10px; fill: black; font-weight: normal; font-style: italic;">25</tspan></text><text transform="rotate(91.80000000000004) translate(253.75,0) rotate(180)"><tspan x="0" y="4" style="font-family: Arial, sans-serif; font-size: 10px; fill: black; font-weight: normal; font-style: italic;">61</tspan></text><text transform="rotate(95.4) translate(253.75,0) rotate(180)"><tspan x="0" y="4" style="font-family: Arial, sans-serif; font-size: 10px; fill: black; font-weight: normal; font-style: italic;">86</tspan></text><text transform="rotate(99.00000000000006) translate(253.75,0) rotate(180)"><tspan x="0" y="4" style="font-family: Arial, sans-serif; font-size: 10px; fill: black; font-weight: normal; font-style: italic;">99</tspan></text><text transform="rotate(102.60000000000005) translate(253.75,0) rotate(180)"><tspan x="0" y="4" style="font-family: Arial, sans-serif; font-size: 10px; fill: black; font-weight: normal; font-style: italic;">34</tspan></text><text transform="rotate(106.20000000000002) translate(253.75,0) rotate(180)"><tspan x="0" y="4" style="font-family: Arial, sans-serif; font-size: 10px; fill: black; font-weight: normal; font-style: italic;">44</tspan></text><text transform="rotate(109.80000000000004) translate(253.75,0) rotate(180)"><tspan x="0" y="4" style="font-family: Arial, sans-serif; font-size: 10px; fill: black; font-weight: normal; font-style: italic;">73</tspan></text><text transform="rotate(113.4) translate(253.75,0) rotate(180)"><tspan x="0" y="4" style="font-family: Arial, sans-serif; font-size: 10px; fill: black; font-weight: normal; font-style: italic;">76</tspan></text><text transform="rotate(116.99999999999997) translate(253.75,0) rotate(180)"><tspan x="0" y="4" style="font-family: Arial, sans-serif; font-size: 10px; fill: black; font-weight: normal; font-style: italic;">48</tspan></text><text transform="rotate(120.60000000000002) translate(253.75,0) rotate(180)"><tspan x="0" y="4" style="font-family: Arial, sans-serif; font-size: 10px; fill: black; font-weight: normal; font-style: italic;">60</tspan></text><text transform="rotate(124.20000000000002) translate(253.75,0) rotate(180)"><tspan x="0" y="4" style="font-family: Arial, sans-serif; font-size: 10px; fill: black; font-weight: normal; font-style: italic;">59</tspan></text><text transform="rotate(127.80000000000004) translate(253.75,0) rotate(180)"><tspan x="0" y="4" style="font-family: Arial, sans-serif; font-size: 10px; fill: black; font-weight: normal; font-style: italic;">71</tspan></text><text transform="rotate(131.40000000000003) translate(253.75,0) rotate(180)"><tspan x="0" y="4" style="font-family: Arial, sans-serif; font-size: 10px; fill: black; font-weight: normal; font-style: italic;">82</tspan></text><text transform="rotate(135.00000000000006) translate(253.75,0) rotate(180)"><tspan x="0" y="4" style="font-family: Arial, sans-serif; font-size: 10px; fill: black; font-weight: normal; font-style: italic;">89</tspan></text><text transform="rotate(138.60000000000002) translate(253.75,0) rotate(180)"><tspan x="0" y="4" style="font-family: Arial, sans-serif; font-size: 10px; fill: black; font-weight: normal; font-style: italic;">75</tspan></text><text transform="rotate(142.2) translate(253.75,0) rotate(180)"><tspan x="0" y="4" style="font-family: Arial, sans-serif; font-size: 10px; fill: black; font-weight: normal; font-style: italic;">87</tspan></text><text transform="rotate(145.8) translate(253.75,0) rotate(180)"><tspan x="0" y="4" style="font-family: Arial, sans-serif; font-size: 10px; fill: black; font-weight: normal; font-style: italic;">91</tspan></text><text transform="rotate(149.4000000000001) translate(253.75,0) rotate(180)"><tspan x="0" y="4" style="font-family: Arial, sans-serif; font-size: 10px; fill: black; font-weight: normal; font-style: italic;">10</tspan></text><text transform="rotate(153.00000000000006) translate(253.75,0) rotate(180)"><tspan x="0" y="4" style="font-family: Arial, sans-serif; font-size: 10px; fill: black; font-weight: normal; font-style: italic;">12</tspan></text><text transform="rotate(156.60000000000005) translate(253.75,0) rotate(180)"><tspan x="0" y="4" style="font-family: Arial, sans-serif; font-size: 10px; fill: black; font-weight: normal; font-style: italic;">11</tspan></text><text transform="rotate(160.20000000000002) translate(253.75,0) rotate(180)"><tspan x="0" y="4" style="font-family: Arial, sans-serif; font-size: 10px; fill: black; font-weight: normal; font-style: italic;">18</tspan></text><text transform="rotate(163.79999999999998) translate(253.75,0) rotate(180)"><tspan x="0" y="4" style="font-family: Arial, sans-serif; font-size: 10px; fill: black; font-weight: normal; font-style: italic;">33</tspan></text><text transform="rotate(167.39999999999998) translate(253.75,0) rotate(180)"><tspan x="0" y="4" style="font-family: Arial, sans-serif; font-size: 10px; fill: black; font-weight: normal; font-style: italic;">50</tspan></text><text transform="rotate(170.99999999999994) translate(253.75,0) rotate(180)"><tspan x="0" y="4" style="font-family: Arial, sans-serif; font-size: 10px; fill: black; font-weight: normal; font-style: italic;">52</tspan></text><text transform="rotate(174.60000000000002) translate(253.75,0) rotate(180)"><tspan x="0" y="4" style="font-family: Arial, sans-serif; font-size: 10px; fill: black; font-weight: normal; font-style: italic;">13</tspan></text><text transform="rotate(178.20000000000005) translate(253.75,0) rotate(180)"><tspan x="0" y="4" style="font-family: Arial, sans-serif; font-size: 10px; fill: black; font-weight: normal; font-style: italic;">14</tspan></text><text transform="rotate(181.8) translate(253.75,0) rotate(180)"><tspan x="0" y="4" style="font-family: Arial, sans-serif; font-size: 10px; fill: black; font-weight: normal; font-style: italic;">26</tspan></text><text transform="rotate(185.39999999999998) translate(253.75,0) rotate(180)"><tspan x="0" y="4" style="font-family: Arial, sans-serif; font-size: 10px; fill: black; font-weight: normal; font-style: italic;">36</tspan></text><text transform="rotate(188.99999999999994) translate(253.75,0) rotate(180)"><tspan x="0" y="4" style="font-family: Arial, sans-serif; font-size: 10px; fill: black; font-weight: normal; font-style: italic;">47</tspan></text><text transform="rotate(192.5999999999999) translate(253.75,0) rotate(180)"><tspan x="0" y="4" style="font-family: Arial, sans-serif; font-size: 10px; fill: black; font-weight: normal; font-style: italic;">90</tspan></text><text transform="rotate(196.2) translate(253.75,0) rotate(180)"><tspan x="0" y="4" style="font-family: Arial, sans-serif; font-size: 10px; fill: black; font-weight: normal; font-style: italic;">38</tspan></text><text transform="rotate(199.8) translate(253.75,0) rotate(180)"><tspan x="0" y="4" style="font-family: Arial, sans-serif; font-size: 10px; fill: black; font-weight: normal; font-style: italic;">42</tspan></text><text transform="rotate(203.39999999999998) translate(253.75,0) rotate(180)"><tspan x="0" y="4" style="font-family: Arial, sans-serif; font-size: 10px; fill: black; font-weight: normal; font-style: italic;">53</tspan></text><text transform="rotate(206.99999999999994) translate(253.75,0) rotate(180)"><tspan x="0" y="4" style="font-family: Arial, sans-serif; font-size: 10px; fill: black; font-weight: normal; font-style: italic;">65</tspan></text><text transform="rotate(210.60000000000002) translate(253.75,0) rotate(180)"><tspan x="0" y="4" style="font-family: Arial, sans-serif; font-size: 10px; fill: black; font-weight: normal; font-style: italic;">39</tspan></text><text transform="rotate(214.2) translate(253.75,0) rotate(180)"><tspan x="0" y="4" style="font-family: Arial, sans-serif; font-size: 10px; fill: black; font-weight: normal; font-style: italic;">64</tspan></text><text transform="rotate(217.79999999999995) translate(253.75,0) rotate(180)"><tspan x="0" y="4" style="font-family: Arial, sans-serif; font-size: 10px; fill: black; font-weight: normal; font-style: italic;">95</tspan></text><text transform="rotate(221.39999999999998) translate(253.75,0) rotate(180)"><tspan x="0" y="4" style="font-family: Arial, sans-serif; font-size: 10px; fill: black; font-weight: normal; font-style: italic;">97</tspan></text><text transform="rotate(225.00000000000006) translate(253.75,0) rotate(180)"><tspan x="0" y="4" style="font-family: Arial, sans-serif; font-size: 10px; fill: black; font-weight: normal; font-style: italic;">54</tspan></text><text transform="rotate(228.60000000000002) translate(253.75,0) rotate(180)"><tspan x="0" y="4" style="font-family: Arial, sans-serif; font-size: 10px; fill: black; font-weight: normal; font-style: italic;">56</tspan></text><text transform="rotate(232.20000000000005) translate(253.75,0) rotate(180)"><tspan x="0" y="4" style="font-family: Arial, sans-serif; font-size: 10px; fill: black; font-weight: normal; font-style: italic;">63</tspan></text><text transform="rotate(235.8) translate(253.75,0) rotate(180)"><tspan x="0" y="4" style="font-family: Arial, sans-serif; font-size: 10px; fill: black; font-weight: normal; font-style: italic;">19</tspan></text><text transform="rotate(239.39999999999998) translate(253.75,0) rotate(180)"><tspan x="0" y="4" style="font-family: Arial, sans-serif; font-size: 10px; fill: black; font-weight: normal; font-style: italic;">23</tspan></text><text transform="rotate(243) translate(253.75,0) rotate(180)"><tspan x="0" y="4" style="font-family: Arial, sans-serif; font-size: 10px; fill: black; font-weight: normal; font-style: italic;">28</tspan></text><text transform="rotate(246.60000000000002) translate(253.75,0) rotate(180)"><tspan x="0" y="4" style="font-family: Arial, sans-serif; font-size: 10px; fill: black; font-weight: normal; font-style: italic;">29</tspan></text><text transform="rotate(250.19999999999993) translate(253.75,0) rotate(180)"><tspan x="0" y="4" style="font-family: Arial, sans-serif; font-size: 10px; fill: black; font-weight: normal; font-style: italic;">31</tspan></text><text transform="rotate(253.79999999999995) translate(253.75,0) rotate(180)"><tspan x="0" y="4" style="font-family: Arial, sans-serif; font-size: 10px; fill: black; font-weight: normal; font-style: italic;">41</tspan></text><text transform="rotate(257.3999999999999) translate(253.75,0) rotate(180)"><tspan x="0" y="4" style="font-family: Arial, sans-serif; font-size: 10px; fill: black; font-weight: normal; font-style: italic;">77</tspan></text><text transform="rotate(260.99999999999994) translate(253.75,0) rotate(180)"><tspan x="0" y="4" style="font-family: Arial, sans-serif; font-size: 10px; fill: black; font-weight: normal; font-style: italic;">79</tspan></text><text transform="rotate(264.59999999999985) translate(253.75,0) rotate(180)"><tspan x="0" y="4" style="font-family: Arial, sans-serif; font-size: 10px; fill: black; font-weight: normal; font-style: italic;">88</tspan></text><text transform="rotate(268.2000000000001) translate(253.75,0) rotate(180)"><tspan x="0" y="4" style="font-family: Arial, sans-serif; font-size: 10px; fill: black; font-weight: normal; font-style: italic;">67</tspan></text></g><g id="legend" transform="translate(805,10)"><g transform="translate(5,0)"><g class="legendColor" transform="translate(0,0)"><g class="legendCells" transform="translate(0,16)"><g class="cell" transform="translate(0, 0)"><rect class="swatch" height="15" width="15" style="fill: rgb(31, 119, 180);"/><text class="label" transform="translate( 20, 12.5)" font-family="&quot;Arial&quot;, sans-serif" font-size="10px"><tspan x="0" dy="0em">Americas</tspan></text></g><g class="cell" transform="translate(0, 21)"><rect class="swatch" height="15" width="15" style="fill: rgb(255, 127, 14);"/><text class="label" transform="translate( 20, 12.5)" font-family="&quot;Arial&quot;, sans-serif" font-size="10px"><tspan x="0" dy="0em">Asia</tspan></text></g><g class="cell" transform="translate(0, 42)"><rect class="swatch" height="15" width="15" style="fill: rgb(44, 160, 44);"/><text class="label" transform="translate( 20, 12.5)" font-family="&quot;Arial&quot;, sans-serif" font-size="10px"><tspan x="0" dy="0em">Europe</tspan></text></g><g class="cell" transform="translate(0, 63)"><rect class="swatch" height="15" width="15" style="fill: rgb(214, 39, 40);"/><text class="label" transform="translate( 20, 12.5)" font-family="&quot;Arial&quot;, sans-serif" font-size="10px"><tspan x="0" dy="0em">Oceania</tspan></text></g></g><text class="legendTitle" font-family="&quot;Arial&quot;, sans-serif" font-size="12px" font-weight="bold"><tspan x="0" dy="0em">Region</tspan></text></g></g></g></svg></object>
+
+            <p>Con el puesto 84, la Universidad de Buenos Aires (<abbr title="Universidad de Buenos Aires">UBA</abbr>) es la única institución hispanoamericana dentro del top 100 mundial. Entre las 100 y las 200 mejores le siguen la Pontificia Universidad Católica de Chile (119), la Universidad Nacional Autónoma de México (145), la Universidad de Chile (185) y el Tecnológico de Monterrey (188).
+            </p>
+
+            <h4>Chile en América</h4>
+
+            <p>El continente americano reúne 322 de las 1.504 instituciones consideradas en el ranking. Su distribución por país es la siguiente:</p>
+
+            <canvas id="identidad"></canvas>
+
+            <p>Los cinco países con más instituciones son Estados Unidos (184), Canadá (30), Brasil (22), México (18) y Chile (17).</p>
+
+            <h4>Las universidades chilenas con escuelas de Arte y Diseño</h4>
+
+            <p>De las 17 universidades chilenas del ranking, 13 ofrecen Diseño y 6 de ellas ofrecen también Arte.</p>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th scope="col">Ranking</th>
+                        <th scope="col">Institución</th>
+                        <th scope="col">Diseño</th>
+                        <th scope="col">Arte</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <th scope="row">119</th>
+                        <td>Pontificia Universidad Católica de Chile (<abbr>PUC</abbr>)</td>
+                        <td>👍</td>
+                        <td>👍</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">185</th>
+                        <td>Universidad de Chile (<abbr>UCh</abbr>)</td>
+                        <td>👍</td>
+                        <td>👍</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">551</th>
+                        <td>Universidad de Santiago de Chile (<abbr>USACH</abbr>)</td>
+                        <td>👍</td>
+                        <td>👎</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">655</th>
+                        <td>Universidad de Concepción</td>
+                        <td>👎</td>
+                        <td>👎</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">662</th>
+                        <td>Universidad Adolfo Ibáñez (<abbr>UAI</abbr>)</td>
+                        <td>👍</td>
+                        <td>👎</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">851-900</th>
+                        <td>Pontificia Universidad Católica de Valparaíso (<abbr>PUCV</abbr>)</td>
+                        <td>👍</td>
+                        <td>👍</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">901-950</th>
+                        <td>Universidad de los Andes</td>
+                        <td>👎</td>
+                        <td>👎</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">1001-1200</th>
+                        <td>Universidad Andrés Bello (<abbr>UNAB</abbr>)</td>
+                        <td>👍</td>
+                        <td>👍</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">1001-1200</th>
+                        <td>Universidad Austral de Chile (<abbr>UACh</abbr>)</td>
+                        <td>👍</td>
+                        <td>👍</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">1001-1200</th>
+                        <td>Universidad Técnica Federico Santa María (<abbr>UTFSM</abbr>)</td>
+                        <td>👍</td>
+                        <td>👎</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">1201-1400</th>
+                        <td>Universidad de la Frontera (<abbr>UFRO</abbr>)</td>
+                        <td>👎</td>
+                        <td>👎</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">1201-1400</th>
+                        <td>Universidad de Talca</td>
+                        <td>👍</td>
+                        <td>👎</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">1201-1400</th>
+                        <td>Universidad del Desarrollo (<abbr>UDD</abbr>)</td>
+                        <td>👍</td>
+                        <td>👎</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">1201-1400</th>
+                        <td>Universidad Diego Portales (<abbr>UDP</abbr>)</td>
+                        <td>👍</td>
+                        <td>👍</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">1401+</th>
+                        <td>Universidad Católica del Norte</td>
+                        <td>👎</td>
+                        <td>👎</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">1401+</th>
+                        <td>Universidad de Tarapacá (<abbr>UTA</abbr>)</td>
+                        <td>👍</td>
+                        <td>👎</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">1401+</th>
+                        <td>Universidad de Valparaíso (<abbr>UV</abbr>)</td>
+                        <td>👍</td>
+                        <td>👎</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <p>
+                En el ranking por disciplina de Arte y Diseño figuran solo tres universidades chilenas: la
+                <abbr>PUC</abbr>, la <abbr>UCh</abbr> y la <abbr>UDD</abbr>. De ellas, la <abbr>UDD</abbr> imparte
+                Diseño pero no Arte. El siguiente gráfico permite comparar a las tres en cinco dimensiones del ranking
+                institucional.
+            </p>
+
+           <svg class="grafico" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 580" role="img"
+     aria-label="Gráfico radar que compara cinco dimensiones de la PUC, la UCh y la UDD"
+     font-family="Source Sans 3, Arial, sans-serif">
+
+  <g transform="translate(300 300)">
+    <g fill="none" stroke="#ddd">
+      <circle r="48" /><circle r="96" /><circle r="144" /><circle r="192" /><circle r="240" />
+    </g>
+
+    <g stroke="#aaa">
+      <line x2="0"      y2="-240" />
+      <line x2="228.3"  y2="-74.2" />
+      <line x2="141.1"  y2="194.2" />
+      <line x2="-141.1" y2="194.2" />
+      <line x2="-228.3" y2="-74.2" />
+    </g>
+
+    <g font-size="12" text-anchor="middle" fill="#3c3c3c">
+      <text x="0"    y="-255">Staff with PhD</text>
+      <text x="246"  y="-77">Academic Reputation</text>
+      <text x="151"  y="208">International Research Network</text>
+      <text x="-151" y="208">Papers Per Faculty</text>
+      <text x="-246" y="-77">Citations per Paper</text>
+    </g>
+
+    <polygon id="puc" class="area" fill="#FEC60D" stroke="#FEC60D" fill-opacity="0.2" stroke-width="2"
+             points="0,-236 228.3,-74.2 141.1,194.2 -137.5,189.3 -176.9,-57.5" />
+    <polygon id="uch" class="area" fill="#1F5592" stroke="#1F5592" fill-opacity="0.2" stroke-width="2"
+             points="0,-173 228.3,-74.2 141.1,194.2 -141.1,194.2 -175.9,-57.2" />
+    <polygon id="udd" class="area" fill="#2ca02c" stroke="#2ca02c" fill-opacity="0.2" stroke-width="2"
+             points="0,-153 205.4,-66.7 139.3,191.7 -126.4,173.9 -200.7,-65.2" />
+  </g>
+
+  <g transform="translate(605 60)" font-size="12">
+    <text font-weight="bold">Instituciones</text>
+
+    <g class="item" onclick="alternar('puc', this)">
+      <rect y="16" width="14" height="14" fill="#FEC60D" />
+      <text x="22" y="28">Pontificia Universidad Católica</text>
+    </g>
+    <g class="item" onclick="alternar('uch', this)">
+      <rect y="38" width="14" height="14" fill="#1F5592" />
+      <text x="22" y="50">Universidad de Chile</text>
+    </g>
+    <g class="item" onclick="alternar('udd', this)">
+      <rect y="60" width="14" height="14" fill="#2ca02c" />
+      <text x="22" y="72">Universidad del Desarrollo</text>
+    </g>
+  </g>
+</svg>
+
+  <g transform="translate(300 300)">
+    <g class="grid">
+      <circle r="48" /><circle r="96" /><circle r="144" /><circle r="192" /><circle r="240" />
+    </g>
+
+    <g class="eje">
+      <line x2="0"      y2="-240" />
+      <line x2="228.3"  y2="-74.2" />
+      <line x2="141.1"  y2="194.2" />
+      <line x2="-141.1" y2="194.2" />
+      <line x2="-228.3" y2="-74.2" />
+    </g>
+
+    <text class="texto" x="0"    y="-255">Staff with PhD</text>
+    <text class="texto" x="246"  y="-77">Academic Reputation</text>
+    <text class="texto" x="151"  y="208">International Research Network</text>
+    <text class="texto" x="-151" y="208">Papers Per Faculty</text>
+    <text class="texto" x="-246" y="-77">Citations per Paper</text>
+
+    <polygon id="puc" class="area puc" points="0,-236 228.3,-74.2 141.1,194.2 -137.5,189.3 -176.9,-57.5" />
+    <polygon id="uch" class="area uch" points="0,-173 228.3,-74.2 141.1,194.2 -141.1,194.2 -175.9,-57.2" />
+    <polygon id="udd" class="area udd" points="0,-153 205.4,-66.7 139.3,191.7 -126.4,173.9 -200.7,-65.2" />
+  </g>
+
+  <g transform="translate(605 60)">
+    <text font-weight="bold" font-size="12">Instituciones</text>
+
+    <g class="item" onclick="alternar('puc', this)">
+      <rect y="16" fill="#FEC60D" />
+      <text x="22" y="28">Pontificia Universidad Católica</text>
+    </g>
+    <g class="item" onclick="alternar('uch', this)">
+      <rect y="38" fill="#1F5592" />
+      <text x="22" y="50">Universidad de Chile</text>
+    </g>
+    <g class="item" onclick="alternar('udd', this)">
+      <rect y="60" fill="#2ca02c" />
+      <text x="22" y="72">Universidad del Desarrollo</text>
+    </g>
+  </g>
+</svg>
+                <rect width="880" height="580" fill="silver" />
+                <text x="10" y="40">[Reemplazar por un gráfico interactivo como el trabajado en las clases 10 y 11.]</text>
+                <text x="10" y="70">Debe comparar cinco dimensiones de la PUC, la UCh y la UDD. Nada más.</text>
+            </svg>
+
+            <p>La comparación de las dimensiones <strong>[continuar texto]</strong></p>
+
+            <hr>
+
+            <h3 id="escuelas">
+                Las 100 mejores escuelas de Arte y Diseño según
+                <abbr title="Quacquarelli Symonds">QS</abbr>
+            </h3>
+
+            <p>
+                El <em><abbr title="Quacquarelli Symonds">QS</abbr> World University Rankings by Subject</em> se rige por criterios distintos a los del ranking institucional. En Arte y Diseño no mide citas de investigación ni índice H, y se apoya solo en la reputación académica y la reputación entre empleadores. Sus críticos advierten que este enfoque abre un mayor margen de subjetividad. Chile queda con poca presencia: solo tres universidades (la <abbr>PUC</abbr>, la <abbr>UCh</abbr> y la <abbr>UDD</abbr>) figuran en la medición, con una entre las 100 mejores.
+            </p>
+
+            <h4>América</h4>
+            <p>Escuelas de Arte y Diseño de países americanos entre las 100 mejores.</p>
+            <table>
+                <thead>
+                    <tr>
+                        <th scope="col">Ranking</th>
+                        <th scope="col">Institución</th>
+                        <th scope="col">País</th>
+                    </tr>
+                </thead>
+                <tbody id="america"></tbody>
+            </table>
+
+            <h4>Europa</h4>
+            <p>Escuelas de Arte y Diseño de países europeos entre las 100 mejores.</p>
+            <table>
+                <thead>
+                    <tr>
+                        <th scope="col">Ranking</th>
+                        <th scope="col">Institución</th>
+                        <th scope="col">País</th>
+                    </tr>
+                </thead>
+                <tbody id="europa"></tbody>
+            </table>
+
+            <h4>Otros continentes</h4>
+            <p>Escuelas de Arte y Diseño de Asia y Oceanía entre las 100 mejores.</p>
+            <table>
+                <thead>
+                    <tr>
+                        <th scope="col">Ranking</th>
+                        <th scope="col">Institución</th>
+                        <th scope="col">País</th>
+                    </tr>
+                </thead>
+                <tbody id="otros"></tbody>
+            </table>
+
+            <h3 id="intercambios">Oportunidades para estudiantes de la Universidad de Chile</h3>
+
+            <p>
+                La carrera de Diseño de la Facultad de Arquitectura y Urbanismo de la Universidad de Chile mantiene
+                convenios vigentes con instituciones que figuran entre las 100 mejores en Arte y Diseño según
+                <abbr title="Quacquarelli Symonds">QS</abbr>:
+            </p>
+
+            <ul>
+                <li>
+                    <em>Politecnico di Milano (Italia):</em> la opción europea mejor posicionada del ranking entre las
+                    instituciones con convenio.
+                </li>
+                <li>
+                    <em>Universidade de São Paulo (Brasil):</em> referente regional en la clasificación mundial de Arte
+                    y Diseño.
+                </li>
+                <li>
+                    <em>Universidad de Buenos Aires (Argentina):</em> una de las instituciones históricas más
+                    prominentes de Sudamérica.
+                </li>
+                <li>
+                    <em>Tecnológico de Monterrey (México):</em> presente en el ranking de Arte y Diseño.
+                </li>
+                <li>
+                    <em>Universidad Nacional Autónoma de México (México):</em> una de las universidades más grandes y
+                    reconocidas de la región en artes y humanidades.
+                </li>
+            </ul>
+
+            <div class="nota">
+                <span>Nota:</span> La disponibilidad de cupos, los requisitos de idioma y los llamados a postulación
+                deben verificarse cada año, al igual que la posición de cada institución en el Ranking
+                <abbr title="Quacquarelli Symonds">QS</abbr>.
+            </div>
+
+            <dl>
+                <dt>Fuentes</dt>
+                <dd>
+                    <em>Datos:</em> Tomados el 21 de septiembre de 2026 desde
+                    <a href="https://www.topuniversities.com/world-university-rankings" target="_blank" rel="noopener">QS World University Rankings</a> y <a href="https://www.topuniversities.com/university-subject-rankings/art-design" target="_blank" rel="noopener">QS World University Rankings by Subject: Art &amp; Design</a>.
+                </dd>
+                <dd>
+                    <em>Procesamiento:</em> Datos estructurados en formato JSON e incorporados a la página mediante
+                    carga asíncrona.
+                </dd>
+                <dd>
+                    <em>Contexto:</em> Proyecto desarrollado como ejercicio práctico para la asignatura
+                    <a href="https://github.com/profesorfaco/troncal" target="_blank" rel="noopener"
+                        >Diseño y Visualización de Información</a
+                    >.
+                </dd>
+            </dl>
+        </div>
+
+        <!-- Lo necesario para el gráfico interactivo en SVG -->
+        <script>
+             function alternar(id, item) {
+        const poligono = document.getElementById(id);
+        const oculto = poligono.style.display === "none";
+        poligono.style.display = oculto ? "" : "none";
+        item.style.opacity = oculto ? "1" : "0.3";
+    }
+        </script>
+
+        <!-- Lo necesario para el gráfico en el canvas -->
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <script>
+            new Chart(document.getElementById("identidad"), {
+                type: "bar",
+                data: {
+                    labels: [
+                        "Argentina",
+                        "Australia",
+                        "Austria",
+                        "Belgium",
+                        "Brazil",
+                        "Canada",
+                        "Chile",
+                        "China (Mainland)",
+                        "Colombia",
+                        "Czech Republic",
+                        "Denmark",
+                        "Estonia",
+                        "Finland",
+                        "France",
+                        "Germany",
+                        "Hong Kong",
+                        "India",
+                        "Ireland",
+                        "Italy",
+                        "Japan",
+                        "Malaysia",
+                        "Mexico",
+                        "Netherlands",
+                        "Saudi Arabia",
+                        "Singapore",
+                        "South Korea",
+                        "Sweden",
+                        "Switzerland",
+                        "Taiwan",
+                        "Thailand",
+                        "United Kingdom",
+                        "United States",
+                        "Vietnam",
+                    ],
+                    datasets: [
+                        {
+                            label: "Veces en el top 100",
+                            data: [
+                                2, 5, 2, 1, 1, 2, 1, 6, 1, 1, 1, 1, 1, 3, 2, 2, 1, 1, 6, 2, 2, 2, 4, 1, 3, 3, 3, 2, 1,
+                                1, 11, 24, 1,
+                            ],
+                            backgroundColor: "rgb(214, 214, 214)",
+                            borderWidth: 1,
+                        },
+                    ],
+                },
+                options: {
+                    indexAxis: "y",
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    aspectRatio: 1,
+                },
+            });
+        </script>
+
+        <!-- Lo necesario para rellenar las tablas con su propio JSON publicado en myJSON (el mismo que pudo usar para la evaluación pasada) -->
+        <script>
+            
+            const tbodyAmerica = document.querySelector("#america");
+            const tbodyEuropa = document.querySelector("#europa");
+            const tbodyOtros = document.querySelector("#otros");
+
+            const ENDPOINT = "https://api.myjson.online/v1/records/376d977e-1a28-4b9f-b18c-d6c2b4411805";
+
+            const paisesAmerica = ["Argentina", "Brazil", "Canada", "Chile", "Colombia", "Mexico", "United States"];
+            const paisesEuropa = ["Austria", "Belgium", "Czech Republic", "Denmark", "Estonia", "Finland", "France", "Germany", "Ireland", "Italy", "Netherlands", "Sweden", "Switzerland", "United Kingdom"];
+
+            let htmlAmerica = "";
+            let htmlEuropa = "";
+            let htmlOtros = "";
+
+            var cuenta_america = 0;
+            var cuenta_europa = 0;
+            var cuenta_otros = 0;
+
+            fetch(ENDPOINT)
+                .then((respuesta) => {
+                    if (!respuesta.ok) {
+                        throw new Error("Error HTTP: " + respuesta.status);
+                    }
+                    return respuesta.json();
+                })
+                .then((datos) => {
+                    const escuelas = datos.data;
+
+                    escuelas.forEach((e) => {
+                        const esAmericana = paisesAmerica.some((pais) => e.location.includes(pais));
+                        const esEuropea = paisesEuropa.some((pais) => e.location.includes(pais));
+
+                        const pais = e.location.split(", ").pop();
+                        const fila = `<tr><td>${e.rank}</td><td>${e.name}</td><td>${pais}</td></tr>`;
+
+                        if (esAmericana) {
+                            htmlAmerica += fila;
+                            cuenta_america = cuenta_america + 1;
+                        } else if (esEuropea) {
+                            htmlEuropa += fila;
+                            cuenta_europa = cuenta_europa + 1;
+                        } else {
+                            htmlOtros += fila;
+                            cuenta_otros = cuenta_otros + 1;
+                        }
+                    });
+
+                    tbodyAmerica.innerHTML = htmlAmerica;
+                    tbodyEuropa.innerHTML = htmlEuropa;
+                    tbodyOtros.innerHTML = htmlOtros;
+
+                    document.querySelector("#bolitas_americanas").innerHTML = bolitas(cuenta_america);
+                    document.querySelector("#bolitas_europeas").innerHTML = bolitas(cuenta_europa);
+                    document.querySelector("#bolitas_otras").innerHTML = bolitas(cuenta_otros);
+                })
+                .catch((error) => {
+                    console.error("Algo salió mal:", error);
+                });
+
+            function bolitas(x) {
+                var visual = "";
+                for (let i = 0; i < x; i++) {
+                    visual += " ✐️ ";
+                }
+                return "<span>" + visual + "</span>";
+            }
+        </script>
+    </body>
+</html>
